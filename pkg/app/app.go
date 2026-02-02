@@ -39,20 +39,25 @@ func NewApp(config *types.Config, version string) *App {
 		logger.Fatal().Err(err).Msg("Could not start Telegram bot")
 	}
 
-	if len(config.Telegram.Admins) > 0 {
-		logger.Debug().Msg("Using admins whitelist")
-		bot.Use(middleware.Whitelist(config.Telegram.Admins...))
-	}
-
 	proxmoxManager := proxmox.NewManager(config, logger)
-
-	return &App{
+	app := &App{
 		Logger:          logger,
 		ProxmoxManager:  proxmoxManager,
 		TemplateManager: templateManager,
 		Bot:             bot,
 		Version:         version,
 	}
+
+	if len(config.Telegram.Admins) > 0 {
+		logger.Debug().Msg("Using admins whitelist")
+		bot.Use(middleware.Restrict(middleware.RestrictConfig{
+			Chats: config.Telegram.Admins,
+			In:    nil,
+			Out:   app.HandleUnauthorized,
+		}))
+	}
+
+	return app
 }
 
 func (a *App) Start() {
@@ -72,6 +77,16 @@ func (a *App) Start() {
 	a.Logger.Info().Msg("Telegram bot listening")
 
 	a.Bot.Start()
+}
+
+func (a *App) HandleUnauthorized(c tele.Context) error {
+	a.Logger.Info().
+		Int64("sender_id", c.Sender().ID).
+		Str("sender", c.Sender().Username).
+		Str("text", c.Text()).
+		Msg("Unauthorized user, add sender_id to admins in config")
+
+	return nil
 }
 
 func (a *App) HandleCallback(c tele.Context) error {

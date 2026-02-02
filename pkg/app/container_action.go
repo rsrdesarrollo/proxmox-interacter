@@ -52,6 +52,7 @@ func (a *App) HandleContainerAction(actionName string) func(c tele.Context) erro
 
 	return func(c tele.Context) error {
 		a.Logger.Info().
+			Int64("sender_id", c.Sender().ID).
 			Str("sender", c.Sender().Username).
 			Str("text", c.Text()).
 			Str("action", action.action).

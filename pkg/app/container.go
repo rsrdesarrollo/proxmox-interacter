@@ -9,6 +9,7 @@ import (
 
 func (a *App) HandleContainerInfo(c tele.Context) error {
 	a.Logger.Info().
+		Int64("sender_id", c.Sender().ID).
 		Str("sender", c.Sender().Username).
 		Str("text", c.Text()).
 		Msg("Got container info query")

@@ -9,6 +9,7 @@ import (
 
 func (a *App) HandleContainerScale(c tele.Context) error {
 	a.Logger.Info().
+		Int64("sender_id", c.Sender().ID).
 		Str("sender", c.Sender().Username).
 		Str("text", c.Text()).
 		Msg("Got container scale query")
@@ -73,6 +74,7 @@ func (a *App) HandleContainerScale(c tele.Context) error {
 
 func (a *App) HandleDoContainerScale(c tele.Context, data string) error {
 	a.Logger.Info().
+		Int64("sender_id", c.Sender().ID).
 		Str("sender", c.Sender().Username).
 		Str("text", data).
 		Msg("Got container do scale query")

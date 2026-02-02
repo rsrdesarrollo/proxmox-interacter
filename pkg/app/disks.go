@@ -8,6 +8,7 @@ import (
 
 func (a *App) HandleListDisks(c tele.Context) error {
 	a.Logger.Info().
+		Int64("sender_id", c.Sender().ID).
 		Str("sender", c.Sender().Username).
 		Str("text", c.Text()).
 		Msg("Got list disks query")

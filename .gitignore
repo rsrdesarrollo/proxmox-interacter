@@ -4,3 +4,5 @@ main
 dist/
 proxmox-interacter
 **/.DS_Store
+
+.vscode
