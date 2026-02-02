@@ -62,7 +62,6 @@ func NewApp(config *types.Config, version string) *App {
 }
 
 func (a *App) Start() {
-	a.Bot.Handle("/about", a.HandleAbout)
 	a.Bot.Handle("/status", a.HandleStatus)
 	a.Bot.Handle("/containers", a.HandleListContainers)
 	a.Bot.Handle("/container", a.HandleContainerInfo)
@@ -72,6 +71,7 @@ func (a *App) Start() {
 	a.Bot.Handle("/restart", a.HandleContainerAction("restart"))
 	a.Bot.Handle("/scale", a.HandleContainerScale)
 	a.Bot.Handle("/disks", a.HandleListDisks)
+	a.Bot.Handle("/about", a.HandleAbout)
 	a.Bot.Handle("/help", a.HandleHelp)
 
 	a.Bot.Handle(tele.OnCallback, a.HandleCallback)
